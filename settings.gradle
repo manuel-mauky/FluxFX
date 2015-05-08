@@ -1,2 +1,3 @@
 rootProject.name = 'FluxFX'
 
+include "fluxfx","examples:todoflux"
