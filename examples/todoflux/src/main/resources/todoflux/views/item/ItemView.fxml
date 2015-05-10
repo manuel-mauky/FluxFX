@@ -8,9 +8,8 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 
-<HBox fx:id="root" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="-Infinity" styleClass="item_root"
-	  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-	  fx:controller="todoflux.views.item.ItemView">
+<fx:root type="HBox" fx:id="root" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="-Infinity" styleClass="item_root"
+	  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<CheckBox fx:id="completed" mnemonicParsing="false"/>
 		<StackPane alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
@@ -33,4 +32,4 @@
 	<stylesheets>
 		<URL value="@itemview.css"/>
 	</stylesheets>
-</HBox>
+</fx:root>
