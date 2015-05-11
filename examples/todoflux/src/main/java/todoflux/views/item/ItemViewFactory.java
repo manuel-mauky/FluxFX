@@ -20,16 +20,23 @@ public class ItemViewFactory implements Callback<ListView<TodoItem>, ListCell<To
             protected void updateItem(TodoItem item, boolean empty) {
                 super.updateItem(item, empty);
 
-                if(item != null) {
-                    if(!cache.containsKey(item)){
-                        final ViewLoader.Tuple<ItemView> tuple = ViewLoader.loadTuple(ItemView.class);
-                        cache.put(item, tuple);
+                if(empty) {
+                    setText(null);
+                    setGraphic(null);
+                }else {
+                    setText(null);
+
+                    if(item != null) {
+                        if(!cache.containsKey(item)){
+                            final ViewLoader.Tuple<ItemView> tuple = ViewLoader.loadTuple(ItemView.class);
+                            cache.put(item, tuple);
+                        }
+
+                        final ViewLoader.Tuple<ItemView> tuple = cache.get(item);
+
+                        tuple.getController().update(item);
+                        setGraphic(tuple.getParent());
                     }
-
-                    final ViewLoader.Tuple<ItemView> tuple = cache.get(item);
-
-                    tuple.getController().update(item);
-                    setGraphic(tuple.getParent());
                 }
             }
         };

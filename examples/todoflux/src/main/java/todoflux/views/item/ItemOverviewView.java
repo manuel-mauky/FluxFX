@@ -1,6 +1,8 @@
 package todoflux.views.item;
 
 import eu.lestard.fluxfx.View;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import todoflux.data.TodoItem;
@@ -17,13 +19,16 @@ public class ItemOverviewView implements View {
         this.itemStore = itemStore;
     }
 
+    private ObservableList<TodoItem> itemList = FXCollections.observableArrayList();
+
     public void initialize() {
         items.setCellFactory(new ItemViewFactory());
+        items.setItems(itemList);
 
         itemStore.onChange(() -> {
-            items.getItems().clear();
+            itemList.clear();
 
-            items.getItems().addAll(itemStore.getItems());
+            itemList.addAll(itemStore.getItems());
         });
     }
 
