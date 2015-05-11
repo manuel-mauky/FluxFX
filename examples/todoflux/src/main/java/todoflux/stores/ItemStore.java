@@ -3,6 +3,7 @@ package todoflux.stores;
 import eu.lestard.fluxfx.Action;
 import eu.lestard.fluxfx.StoreBase;
 import todoflux.actions.AddItemAction;
+import todoflux.actions.ChangeStateAction;
 import todoflux.actions.DeleteItemAction;
 import todoflux.data.TodoItem;
 
@@ -20,14 +21,16 @@ public class ItemStore extends StoreBase {
 	public void processAction(Action action) {
 		
 		if (action instanceof AddItemAction) {
-			AddItemAction addItemAction = (AddItemAction) action;
-			processAddItemAction(addItemAction);
+            processAddItemAction((AddItemAction) action);
 		}
 		
 		if (action instanceof DeleteItemAction) {
-			DeleteItemAction deleteItemAction = (DeleteItemAction) action;
-			processDeleteItemAction(deleteItemAction);
+            processDeleteItemAction((DeleteItemAction) action);
 		}
+
+        if(action instanceof ChangeStateAction) {
+            processChangeStateAction((ChangeStateAction) action);
+        }
 		
 	}
 	
@@ -48,6 +51,16 @@ public class ItemStore extends StoreBase {
 		
 		publishOnChange();
 	}
+
+	private void processChangeStateAction(ChangeStateAction action) {
+        items
+            .stream()
+            .filter(item -> item.getId().equals(action.getId()))
+            .findAny()
+            .ifPresent(item -> item.setCompleted(action.getNewState()));
+
+        publishOnChange();
+    }
 	
 	public List<TodoItem> getItems() {
 		return Collections.unmodifiableList(items);
