@@ -1,22 +1,17 @@
 package todoflux.views.item;
 
+import eu.lestard.fluxfx.ViewLoader;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 import todoflux.data.TodoItem;
 
-import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ItemViewFactory implements Callback<ListView<TodoItem>, ListCell<TodoItem>> {
 
-    private Map<TodoItem, ItemView> cache = new HashMap<>();
-    private final Provider<ItemView> itemViewProvider;
-
-    public ItemViewFactory(Provider<ItemView> itemViewProvider) {
-        this.itemViewProvider = itemViewProvider;
-    }
+    private Map<TodoItem, ViewLoader.Tuple<ItemView>> cache = new HashMap<>();
 
     @Override
     public ListCell<TodoItem> call(ListView<TodoItem> param) {
@@ -27,12 +22,14 @@ public class ItemViewFactory implements Callback<ListView<TodoItem>, ListCell<To
 
                 if(item != null) {
                     if(!cache.containsKey(item)){
-                        cache.put(item, itemViewProvider.get());
+                        final ViewLoader.Tuple<ItemView> tuple = ViewLoader.loadTuple(ItemView.class);
+                        cache.put(item, tuple);
                     }
 
-                    final ItemView itemView = cache.get(item);
-                    itemView.update(item);
-                    setGraphic(itemView);
+                    final ViewLoader.Tuple<ItemView> tuple = cache.get(item);
+
+                    tuple.getController().update(item);
+                    setGraphic(tuple.getParent());
                 }
             }
         };

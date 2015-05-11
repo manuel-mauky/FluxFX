@@ -1,6 +1,8 @@
 package todoflux.views.controls;
 
-public class ControlsView {
+import eu.lestard.fluxfx.View;
+
+public class ControlsView implements View {
     public void all() {
 
     }

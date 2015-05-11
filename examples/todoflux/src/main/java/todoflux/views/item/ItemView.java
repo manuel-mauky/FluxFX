@@ -1,16 +1,13 @@
 package todoflux.views.item;
 
+import eu.lestard.fluxfx.View;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import todoflux.data.TodoItem;
 
-import java.io.IOException;
-
-public class ItemView extends HBox{
+public class ItemView implements View{
 
 
     @FXML
@@ -21,19 +18,6 @@ public class ItemView extends HBox{
 
     @FXML
     public TextField contentInput;
-
-
-    public ItemView() {
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("ItemView.fxml"));
-        fxmlLoader.setController(this);
-        fxmlLoader.setRoot(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void update(TodoItem item) {
         contentLabel.setText(item.getText());

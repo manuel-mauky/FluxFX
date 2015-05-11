@@ -2,14 +2,13 @@ package todoflux;
 
 import eu.lestard.easydi.EasyDI;
 import eu.lestard.fluxfx.Dispatcher;
+import eu.lestard.fluxfx.ViewLoader;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import todoflux.stores.ItemStore;
-
-import java.net.URL;
+import todoflux.views.MainView;
 
 
 public class App extends Application {
@@ -23,6 +22,7 @@ public class App extends Application {
 
         EasyDI context = new EasyDI();
 
+        context.bindInstance(Dispatcher.class, Dispatcher.getInstance());
         context.markAsSingleton(Dispatcher.class);
 
         final Dispatcher dispatcher = context.getInstance(Dispatcher.class);
@@ -31,14 +31,11 @@ public class App extends Application {
         dispatcher.register(itemStore);
 
 
-        final URL fxml = this.getClass().getResource("/todoflux/views/MainView.fxml");
+        ViewLoader.setDependencyInjector(context::getInstance);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(fxml);
-        fxmlLoader.setControllerFactory(context::getInstance);
+        final Parent parent = ViewLoader.load(MainView.class);
 
-        final Parent root = fxmlLoader.load();
-
-        stage.setScene(new Scene(root));
+        stage.setScene(new Scene(parent));
         stage.show();
     }
 }
