@@ -7,7 +7,7 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import todoflux.stores.ItemStore;
+import todoflux.stores.ItemsStore;
 import todoflux.views.MainView;
 
 
@@ -27,7 +27,7 @@ public class App extends Application {
 
         final Dispatcher dispatcher = context.getInstance(Dispatcher.class);
 
-        final ItemStore itemStore = context.getInstance(ItemStore.class);
+        final ItemsStore itemStore = context.getInstance(ItemsStore.class);
         dispatcher.register(itemStore);
 
 

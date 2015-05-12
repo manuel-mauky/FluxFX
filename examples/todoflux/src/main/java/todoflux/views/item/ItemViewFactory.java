@@ -42,4 +42,16 @@ public class ItemViewFactory implements Callback<ListView<TodoItem>, ListCell<To
         };
     }
 
+    /**
+     * Update the itemView (via {@link ItemView#update(TodoItem)} that shows the TodoItem with the given id.
+     */
+    public void update(String itemId){
+        cache.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().getId().equals(itemId))
+                .findAny()
+                .ifPresent(entry ->
+                        entry.getValue().getController().update(entry.getKey()));
+    }
+
 }

@@ -5,6 +5,7 @@ dependencies {
 
     compile project(":fluxfx")
 
+    compile 'org.reactfx:reactfx:2.0-M4'
     compile "eu.lestard:easy-di:0.3.0"
     compile "de.jensd:fontawesomefx:8.3"
 }

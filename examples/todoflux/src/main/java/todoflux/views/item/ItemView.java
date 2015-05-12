@@ -23,14 +23,15 @@ public class ItemView implements View{
 
     private String id;
 
+
+    public void initialize() {
+        completed.setOnAction(event -> publishAction(new ChangeStateAction(id, completed.isSelected())));
+    }
+
     public void update(TodoItem item) {
         id = item.getId();
         contentLabel.setText(item.getText());
         completed.setSelected(item.isCompleted());
-
-        completed.selectedProperty().addListener(((observable, oldValue, newValue) -> {
-            publishAction(new ChangeStateAction(id, newValue));
-        }));
     }
 
     public void delete() {

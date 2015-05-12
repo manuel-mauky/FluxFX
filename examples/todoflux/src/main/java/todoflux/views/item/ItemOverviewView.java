@@ -1,35 +1,35 @@
 package todoflux.views.item;
 
-import eu.lestard.fluxfx.View;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+
 import todoflux.data.TodoItem;
-import todoflux.stores.ItemStore;
+import todoflux.stores.ItemsStore;
+import eu.lestard.fluxfx.View;
 
 public class ItemOverviewView implements View {
 
     @FXML
     public ListView<TodoItem> items;
 
-    private final ItemStore itemStore;
+    private final ItemsStore itemStore;
 
-    public ItemOverviewView(ItemStore itemStore) {
+    public ItemOverviewView(ItemsStore itemStore) {
         this.itemStore = itemStore;
     }
 
     private ObservableList<TodoItem> itemList = FXCollections.observableArrayList();
 
     public void initialize() {
-        items.setCellFactory(new ItemViewFactory());
-        items.setItems(itemList);
+        final ItemViewFactory itemViewFactory = new ItemViewFactory();
+        items.setCellFactory(itemViewFactory);
 
-        itemStore.onChange(() -> {
-            itemList.clear();
+        itemStore.itemIdsToUpdate().subscribe(itemViewFactory::update);
 
-            itemList.addAll(itemStore.getItems());
-        });
+
+        items.setItems(itemStore.getItems());
     }
 
 }
