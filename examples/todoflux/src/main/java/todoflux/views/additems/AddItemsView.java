@@ -6,7 +6,8 @@ import javafx.scene.control.TextField;
 import todoflux.actions.AddItemAction;
 import todoflux.stores.ItemsStore;
 
-public class AddItemsView implements View{
+public class AddItemsView implements View {
+
     @FXML
     public TextField addInput;
     private ItemsStore itemStore;
