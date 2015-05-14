@@ -10,3 +10,6 @@ Instead it has to trigger so called *actions*.
 These actions are dispatched to *stores* that are containing the application state.
 Stores can react to actions and change their state.
 Afterwards the store emits a "change" event that triggers a re-rendering of the View.
+
+
+Another example of flux with JavaFX can be seen [here](https://github.com/lestard/juggr_model-view-star/tree/master/flux).
