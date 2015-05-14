@@ -1,9 +1,11 @@
 package todoflux.stores;
 
+import com.sun.javafx.scene.control.ReadOnlyUnbackedObservableList;
 import eu.lestard.fluxfx.Action;
 import eu.lestard.fluxfx.StoreBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import org.reactfx.EventSource;
 import org.reactfx.EventStream;
 import todoflux.actions.AddItemAction;
@@ -18,13 +20,11 @@ import javax.inject.Singleton;
 public class ItemsStore extends StoreBase {
 
     private ObservableList<TodoItem> items = FXCollections.observableArrayList();
+    private FilteredList<TodoItem> filteredData = new FilteredList<TodoItem>(items, s -> true);
+    private ChangeFilterAction.VisibilityType filterStatus = null;
 
     private EventSource<String> inputText = new EventSource<>();
     private EventSource<String> itemIdsToUpdate = new EventSource<>();
-
-    private ChangeFilterAction.VisibilityType filterStatus = null;
-
-    private EventSource<ChangeFilterAction.VisibilityType> filterStatusEventSource = new EventSource<>();
 
     @Override
     public void processAction(Action action) {
@@ -79,11 +79,22 @@ public class ItemsStore extends StoreBase {
 
     private void processChangeFilterAction(ChangeFilterAction action) {
         filterStatus = action.getVisibilityType();
-        filterStatusEventSource.push(filterStatus);
+        filteredData.setPredicate(todoItem -> {
+            switch (filterStatus) {
+                case ALL:
+                    return true;
+                case ACTIVE:
+                    return !todoItem.isCompleted();
+                case COMPLETED:
+                    return todoItem.isCompleted();
+                default:
+                    return true;
+            }
+        });
     }
 
-    public ObservableList<TodoItem> getItems() {
-        return FXCollections.unmodifiableObservableList(items);
+    public FilteredList<TodoItem> getItems() {
+        return filteredData;
     }
 
     public EventStream<String> inputText() {
@@ -92,9 +103,5 @@ public class ItemsStore extends StoreBase {
 
     public EventStream<String> itemIdsToUpdate() {
         return itemIdsToUpdate;
-    }
-
-    public EventSource<ChangeFilterAction.VisibilityType> filterStatusEventSource() {
-        return filterStatusEventSource;
     }
 }
