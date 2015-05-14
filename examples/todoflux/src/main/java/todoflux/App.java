@@ -30,7 +30,6 @@ public class App extends Application {
         final ItemsStore itemStore = context.getInstance(ItemsStore.class);
         dispatcher.register(itemStore);
 
-
         ViewLoader.setDependencyInjector(context::getInstance);
 
         final Parent parent = ViewLoader.load(MainView.class);

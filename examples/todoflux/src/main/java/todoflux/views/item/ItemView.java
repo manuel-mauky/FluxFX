@@ -9,8 +9,7 @@ import todoflux.actions.ChangeStateAction;
 import todoflux.actions.DeleteItemAction;
 import todoflux.data.TodoItem;
 
-public class ItemView implements View{
-
+public class ItemView implements View {
 
     @FXML
     public Label contentLabel;
