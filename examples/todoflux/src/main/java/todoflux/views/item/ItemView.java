@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import todoflux.actions.ChangeStateAction;
+import todoflux.actions.ChangeStateForSingleItemAction;
 import todoflux.actions.DeleteItemAction;
 import todoflux.data.TodoItem;
 
@@ -24,7 +24,7 @@ public class ItemView implements View {
 
 
     public void initialize() {
-        completed.setOnAction(event -> publishAction(new ChangeStateAction(id, completed.isSelected())));
+        completed.setOnAction(event -> publishAction(new ChangeStateForSingleItemAction(id, completed.isSelected())));
     }
 
     public void update(TodoItem item) {

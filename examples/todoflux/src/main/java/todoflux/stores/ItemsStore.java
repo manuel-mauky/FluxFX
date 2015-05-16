@@ -1,6 +1,5 @@
 package todoflux.stores;
 
-import com.sun.javafx.scene.control.ReadOnlyUnbackedObservableList;
 import eu.lestard.fluxfx.Action;
 import eu.lestard.fluxfx.StoreBase;
 import javafx.collections.FXCollections;
@@ -9,7 +8,7 @@ import javafx.collections.transformation.FilteredList;
 import org.reactfx.EventSource;
 import org.reactfx.EventStream;
 import todoflux.actions.AddItemAction;
-import todoflux.actions.ChangeStateAction;
+import todoflux.actions.ChangeStateForSingleItemAction;
 import todoflux.actions.ChangeFilterAction;
 import todoflux.actions.DeleteItemAction;
 import todoflux.data.TodoItem;
@@ -39,8 +38,8 @@ public class ItemsStore extends StoreBase {
             return;
         }
 
-        if (action instanceof ChangeStateAction) {
-            processChangeStateAction((ChangeStateAction) action);
+        if (action instanceof ChangeStateForSingleItemAction) {
+            processChangeStateAction((ChangeStateForSingleItemAction) action);
             return;
         }
 
@@ -66,10 +65,10 @@ public class ItemsStore extends StoreBase {
 
     }
 
-    private void processChangeStateAction(ChangeStateAction action) {
+    private void processChangeStateAction(ChangeStateForSingleItemAction action) {
         items
                 .stream()
-                .filter(item -> item.getId().equals(action.getId()))
+                .filter(item -> item.getId().equals(action.getItemId()))
                 .findAny()
                 .ifPresent(item -> {
                     item.setCompleted(action.getNewState());
