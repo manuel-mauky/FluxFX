@@ -7,10 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import org.reactfx.EventSource;
 import org.reactfx.EventStream;
-import todoflux.actions.AddItemAction;
-import todoflux.actions.ChangeStateForSingleItemAction;
-import todoflux.actions.ChangeFilterAction;
-import todoflux.actions.DeleteItemAction;
+import todoflux.actions.*;
 import todoflux.data.TodoItem;
 
 import javax.inject.Singleton;
@@ -20,10 +17,12 @@ public class ItemsStore extends StoreBase {
 
     private ObservableList<TodoItem> items = FXCollections.observableArrayList();
     private FilteredList<TodoItem> filteredData = new FilteredList<TodoItem>(items, s -> true);
-    private ChangeFilterAction.VisibilityType filterStatus = null;
+    private ChangeFilterAction.VisibilityType filterStatus = ChangeFilterAction.VisibilityType.ALL;
 
     private EventSource<String> inputText = new EventSource<>();
     private EventSource<String> itemIdsToUpdate = new EventSource<>();
+    private EventSource<Boolean> selectAllCheckbox = new EventSource<>();
+
 
     @Override
     public void processAction(Action action) {
@@ -39,13 +38,30 @@ public class ItemsStore extends StoreBase {
         }
 
         if (action instanceof ChangeStateForSingleItemAction) {
-            processChangeStateAction((ChangeStateForSingleItemAction) action);
+            processChangeStateSingleItemAction((ChangeStateForSingleItemAction) action);
             return;
         }
 
         if (action instanceof ChangeFilterAction) {
             processChangeFilterAction((ChangeFilterAction) action);
+            return;
         }
+
+        if (action instanceof ChangeStateForAllItemsAction) {
+            processChangeStateAllItemsAction((ChangeStateForAllItemsAction) action);
+        }
+    }
+
+    private void processChangeStateAllItemsAction(ChangeStateForAllItemsAction action) {
+        selectAllCheckbox.push(action.isNewState());
+        items
+                .stream()
+                .filter(item -> item.isCompleted() != action.isNewState())
+                .forEach(item -> {
+                    item.setCompleted(action.isNewState());
+                    itemIdsToUpdate.push(item.getId());
+                });
+        updateFilterPredicate();
     }
 
     private void processDeleteItemAction(DeleteItemAction action) {
@@ -63,9 +79,10 @@ public class ItemsStore extends StoreBase {
 
         inputText.push("");
 
+        selectAllCheckbox.push(false);
     }
 
-    private void processChangeStateAction(ChangeStateForSingleItemAction action) {
+    private void processChangeStateSingleItemAction(ChangeStateForSingleItemAction action) {
         items
                 .stream()
                 .filter(item -> item.getId().equals(action.getItemId()))
@@ -74,10 +91,16 @@ public class ItemsStore extends StoreBase {
                     item.setCompleted(action.getNewState());
                     itemIdsToUpdate.push(item.getId());
                 });
+
+        selectAllCheckbox.push(false);
     }
 
     private void processChangeFilterAction(ChangeFilterAction action) {
         filterStatus = action.getVisibilityType();
+        updateFilterPredicate();
+    }
+
+    private void updateFilterPredicate() {
         filteredData.setPredicate(todoItem -> {
             switch (filterStatus) {
                 case ALL:
@@ -102,5 +125,9 @@ public class ItemsStore extends StoreBase {
 
     public EventStream<String> itemIdsToUpdate() {
         return itemIdsToUpdate;
+    }
+
+    public EventSource<Boolean> selectAllCheckbox() {
+        return selectAllCheckbox;
     }
 }
