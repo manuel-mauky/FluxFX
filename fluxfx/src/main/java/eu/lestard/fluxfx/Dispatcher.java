@@ -1,27 +1,35 @@
 package eu.lestard.fluxfx;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.reactfx.EventSource;
+import org.reactfx.EventStream;
 
-public final class Dispatcher {
+public class Dispatcher {
 
     private static final Dispatcher SINGLETON = new Dispatcher();
+
+    private final EventSource<Action> actionStream = new EventSource<>();
 
     private Dispatcher() {
     }
 
-    public static Dispatcher getInstance() {
+    static Dispatcher getInstance() {
         return SINGLETON;
     }
 
-    private Set<Store> stores = new HashSet<>();
-
     public void dispatch(Action action) {
-        stores.forEach(store -> store.processAction(action));
+        actionStream.push(action);
     }
 
-    public void register(Store store) {
-        stores.add(store);
+    EventStream<Action> getActionStream(){
+        return actionStream;
+    }
+
+    @SuppressWarnings("unchecked")
+    <T extends Action> EventStream<T> getActionStream(Class<T> actionType) {
+        return Dispatcher.getInstance()
+                .getActionStream()
+                .filter(action -> action.getClass().equals(actionType))
+                .map(action -> (T) action);
     }
 
 }

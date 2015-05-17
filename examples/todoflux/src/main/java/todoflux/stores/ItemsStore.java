@@ -1,7 +1,6 @@
 package todoflux.stores;
 
-import eu.lestard.fluxfx.Action;
-import eu.lestard.fluxfx.StoreBase;
+import eu.lestard.fluxfx.Store;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.collections.FXCollections;
@@ -15,7 +14,7 @@ import todoflux.data.TodoItem;
 import javax.inject.Singleton;
 
 @Singleton
-public class ItemsStore extends StoreBase {
+public class ItemsStore implements Store {
 
     private ObservableList<TodoItem> items = FXCollections.observableArrayList();
     private FilteredList<TodoItem> filteredData = new FilteredList<TodoItem>(items, s -> true);
@@ -27,42 +26,14 @@ public class ItemsStore extends StoreBase {
 
     private ReadOnlyIntegerWrapper numberOfItemsLeft = new ReadOnlyIntegerWrapper();
 
-    @Override
-    public void processAction(Action action) {
-
-        if (action instanceof AddItemAction) {
-            processAddItemAction((AddItemAction) action);
-            return;
-        }
-
-        if (action instanceof DeleteItemAction) {
-            processDeleteItemAction((DeleteItemAction) action);
-            return;
-        }
-
-        if (action instanceof ChangeStateForSingleItemAction) {
-            processChangeStateSingleItemAction((ChangeStateForSingleItemAction) action);
-            return;
-        }
-
-        if (action instanceof ChangeFilterAction) {
-            processChangeFilterAction((ChangeFilterAction) action);
-            return;
-        }
-
-        if (action instanceof ChangeStateForAllItemsAction) {
-            processChangeStateAllItemsAction((ChangeStateForAllItemsAction) action);
-            return;
-        }
-
-        if(action instanceof SwitchEditModeAction){
-            processSwitchEditModeAction((SwitchEditModeAction) action);
-            return;
-        }
-
-        if(action instanceof EditAction){
-            processEditAction((EditAction) action);
-        }
+    public ItemsStore() {
+        getActionStream(AddItemAction.class).subscribe(this::processAddItemAction);
+        getActionStream(DeleteItemAction.class).subscribe(this::processDeleteItemAction);
+        getActionStream(ChangeStateForSingleItemAction.class).subscribe(this::processChangeStateSingleItemAction);
+        getActionStream(ChangeFilterAction.class).subscribe(this::processChangeFilterAction);
+        getActionStream(ChangeStateForAllItemsAction.class).subscribe(this::processChangeStateAllItemsAction);
+        getActionStream(SwitchEditModeAction.class).subscribe(this::processSwitchEditModeAction);
+        getActionStream(EditAction.class).subscribe(this::processEditAction);
     }
 
     private void processEditAction(EditAction action){
@@ -176,7 +147,7 @@ public class ItemsStore extends StoreBase {
         return itemIdsToUpdate;
     }
 
-    public EventSource<Boolean> selectAllCheckbox() {
+    public EventStream<Boolean> selectAllCheckbox() {
         return selectAllCheckbox;
     }
 

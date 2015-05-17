@@ -2,3 +2,7 @@ apply plugin: "java"
 
 group = "eu.lestard"
 version = "0.1"
+
+dependencies {
+    compile 'org.reactfx:reactfx:2.0-M4'
+}
