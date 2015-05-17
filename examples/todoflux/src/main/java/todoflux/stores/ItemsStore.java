@@ -2,6 +2,8 @@ package todoflux.stores;
 
 import eu.lestard.fluxfx.Action;
 import eu.lestard.fluxfx.StoreBase;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -23,6 +25,7 @@ public class ItemsStore extends StoreBase {
     private EventSource<String> itemIdsToUpdate = new EventSource<>();
     private EventSource<Boolean> selectAllCheckbox = new EventSource<>();
 
+    private ReadOnlyIntegerWrapper numberOfItemsLeft = new ReadOnlyIntegerWrapper();
 
     @Override
     public void processAction(Action action) {
@@ -94,6 +97,7 @@ public class ItemsStore extends StoreBase {
                     itemIdsToUpdate.push(item.getId());
                 });
         updateFilterPredicate();
+        updateNumberOfItemsLeft();
     }
 
     private void processDeleteItemAction(DeleteItemAction action) {
@@ -102,6 +106,8 @@ public class ItemsStore extends StoreBase {
                 .filter(item -> item.getId().equals(action.getId()))
                 .findAny()
                 .ifPresent(items::remove);
+
+        updateNumberOfItemsLeft();
     }
 
     private void processAddItemAction(AddItemAction action) {
@@ -112,6 +118,8 @@ public class ItemsStore extends StoreBase {
         inputText.push("");
 
         selectAllCheckbox.push(false);
+
+        updateNumberOfItemsLeft();
     }
 
     private void processChangeStateSingleItemAction(ChangeStateForSingleItemAction action) {
@@ -125,6 +133,8 @@ public class ItemsStore extends StoreBase {
                 });
 
         selectAllCheckbox.push(false);
+
+        updateNumberOfItemsLeft();
     }
 
     private void processChangeFilterAction(ChangeFilterAction action) {
@@ -147,6 +157,13 @@ public class ItemsStore extends StoreBase {
         });
     }
 
+    private void updateNumberOfItemsLeft() {
+        numberOfItemsLeft.setValue(items
+                .stream()
+                .filter(item -> !item.isCompleted())
+                .count());
+    }
+
     public FilteredList<TodoItem> getItems() {
         return filteredData;
     }
@@ -161,5 +178,9 @@ public class ItemsStore extends StoreBase {
 
     public EventSource<Boolean> selectAllCheckbox() {
         return selectAllCheckbox;
+    }
+
+    public ReadOnlyIntegerProperty numberOfItemsLeft() {
+        return numberOfItemsLeft.getReadOnlyProperty();
     }
 }
