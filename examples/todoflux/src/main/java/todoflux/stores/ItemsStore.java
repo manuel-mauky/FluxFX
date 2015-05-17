@@ -49,7 +49,39 @@ public class ItemsStore extends StoreBase {
 
         if (action instanceof ChangeStateForAllItemsAction) {
             processChangeStateAllItemsAction((ChangeStateForAllItemsAction) action);
+            return;
         }
+
+        if(action instanceof SwitchEditModeAction){
+            processSwitchEditModeAction((SwitchEditModeAction) action);
+            return;
+        }
+
+        if(action instanceof EditAction){
+            processEditAction((EditAction) action);
+        }
+    }
+
+    private void processEditAction(EditAction action){
+        items.stream()
+                .filter(item -> item.getId().equals(action.getItemId()))
+                .findAny()
+                .ifPresent(item -> {
+                    item.setText(action.getNewText());
+                    item.setEditMode(false);
+                    itemIdsToUpdate.push(item.getId());
+                });
+    }
+
+
+    private void processSwitchEditModeAction(SwitchEditModeAction action) {
+        items.stream()
+                .filter(item -> item.getId().equals(action.getItemId()))
+                .findAny()
+                .ifPresent(item -> {
+                    item.setEditMode(action.isEditMode());
+                    itemIdsToUpdate.push(item.getId());
+                });
     }
 
     private void processChangeStateAllItemsAction(ChangeStateForAllItemsAction action) {

@@ -9,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import todoflux.actions.ChangeStateForSingleItemAction;
 import todoflux.actions.DeleteItemAction;
+import todoflux.actions.EditAction;
+import todoflux.actions.SwitchEditModeAction;
 import todoflux.data.TodoItem;
 
 public class ItemView implements View {
@@ -29,6 +31,9 @@ public class ItemView implements View {
     @FXML
     public Button deleteButton;
 
+    @FXML
+    public HBox contentBox;
+
     private String id;
 
 
@@ -39,17 +44,44 @@ public class ItemView implements View {
 
 
         completed.setOnAction(event -> publishAction(new ChangeStateForSingleItemAction(id, completed.isSelected())));
+
+        contentLabel.setOnMouseClicked(event -> {
+            if(event.getClickCount() > 1) {
+                publishAction(new SwitchEditModeAction(id, true));
+            }
+        });
+
+        contentInput.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue){
+                publishAction(new SwitchEditModeAction(id, false));
+            }
+        });
+
+        contentInput.setOnAction(event -> publishAction(new EditAction(id, contentInput.getText())));
     }
 
     public void update(TodoItem item) {
         id = item.getId();
         contentLabel.setText(item.getText());
+        contentInput.setText(item.getText());
         completed.setSelected(item.isCompleted());
         if(item.isCompleted()) {
             contentLabel.getStyleClass().add(STRIKETHROUGH_CSS_CLASS);
         } else {
             contentLabel.getStyleClass().remove(STRIKETHROUGH_CSS_CLASS);
         }
+
+
+        initEditMode(item.isEditMode());
+    }
+
+    private void initEditMode(boolean editMode){
+        contentInput.setVisible(editMode);
+        if(editMode) {
+            contentInput.requestFocus();
+        }
+        contentBox.setVisible(!editMode);
+        completed.setVisible(!editMode);
     }
 
     public void delete() {

@@ -11,6 +11,8 @@ public class TodoItem {
 	private String text;
 	private boolean completed = false;
 
+    private boolean editMode = false;
+
     public TodoItem(String text) {
         this.text = text;
 
@@ -35,5 +37,13 @@ public class TodoItem {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
     }
 }
