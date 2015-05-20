@@ -1,10 +1,11 @@
 package eu.lestard.fluxfx;
 
-import org.reactfx.EventStream;
+import java.util.function.Consumer;
 
 public interface Store {
 
-    default <T extends Action> EventStream<T> getActionStream(Class<T> actionType) {
-        return Dispatcher.getInstance().getActionStream(actionType);
+    default <T extends Action> void subscribe(Class<T> actionType, Consumer<T> actionConsumer) {
+        Dispatcher.getInstance().getActionStream(actionType).subscribe(actionConsumer);
     }
+
 }

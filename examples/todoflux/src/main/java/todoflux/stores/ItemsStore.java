@@ -27,13 +27,13 @@ public class ItemsStore implements Store {
     private ReadOnlyIntegerWrapper numberOfItemsLeft = new ReadOnlyIntegerWrapper();
 
     public ItemsStore() {
-        getActionStream(AddItemAction.class).subscribe(this::processAddItemAction);
-        getActionStream(DeleteItemAction.class).subscribe(this::processDeleteItemAction);
-        getActionStream(ChangeStateForSingleItemAction.class).subscribe(this::processChangeStateSingleItemAction);
-        getActionStream(ChangeFilterAction.class).subscribe(this::processChangeFilterAction);
-        getActionStream(ChangeStateForAllItemsAction.class).subscribe(this::processChangeStateAllItemsAction);
-        getActionStream(SwitchEditModeAction.class).subscribe(this::processSwitchEditModeAction);
-        getActionStream(EditAction.class).subscribe(this::processEditAction);
+        subscribe(AddItemAction.class, this::processAddItemAction);
+        subscribe(DeleteItemAction.class, this::processDeleteItemAction);
+        subscribe(ChangeStateForSingleItemAction.class, this::processChangeStateSingleItemAction);
+        subscribe(ChangeFilterAction.class, this::processChangeFilterAction);
+        subscribe(ChangeStateForAllItemsAction.class, this::processChangeStateAllItemsAction);
+        subscribe(SwitchEditModeAction.class, this::processSwitchEditModeAction);
+        subscribe(EditAction.class, this::processEditAction);
     }
 
     private void processEditAction(EditAction action){
