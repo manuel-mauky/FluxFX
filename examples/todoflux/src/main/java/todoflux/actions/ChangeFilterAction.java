@@ -8,10 +8,9 @@ public class ChangeFilterAction implements Action {
         ALL,
         ACTIVE,
         COMPLETED
-
     }
 
-    private VisibilityType visibilityType = VisibilityType.ACTIVE;
+    private final VisibilityType visibilityType;
 
     public ChangeFilterAction(VisibilityType visibilityType) {
         this.visibilityType = visibilityType;

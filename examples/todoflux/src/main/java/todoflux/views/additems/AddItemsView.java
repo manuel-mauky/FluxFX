@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import todoflux.actions.AddItemAction;
-import todoflux.actions.ChangeStateForAllItemsAction;
+import todoflux.actions.ChangeCompletedForAllItemsAction;
 import todoflux.stores.ItemsStore;
 
 public class AddItemsView implements View {
@@ -26,7 +26,7 @@ public class AddItemsView implements View {
         addInput.setOnAction(event -> publishAction(new AddItemAction(addInput.getText())));
 
         itemStore.selectAllCheckbox().subscribe(selectAll::setSelected);
-        selectAll.setOnAction(event -> publishAction(new ChangeStateForAllItemsAction(selectAll.isSelected())));
+        selectAll.setOnAction(event -> publishAction(new ChangeCompletedForAllItemsAction(selectAll.isSelected())));
     }
 
 }

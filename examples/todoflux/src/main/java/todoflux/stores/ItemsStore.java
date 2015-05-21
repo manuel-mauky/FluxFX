@@ -29,14 +29,14 @@ public class ItemsStore implements Store {
     public ItemsStore() {
         subscribe(AddItemAction.class, this::processAddItemAction);
         subscribe(DeleteItemAction.class, this::processDeleteItemAction);
-        subscribe(ChangeStateForSingleItemAction.class, this::processChangeStateSingleItemAction);
+        subscribe(ChangeCompletedForSingleItemAction.class, this::processChangeCompletedSingleItemAction);
         subscribe(ChangeFilterAction.class, this::processChangeFilterAction);
-        subscribe(ChangeStateForAllItemsAction.class, this::processChangeStateAllItemsAction);
+        subscribe(ChangeCompletedForAllItemsAction.class, this::processChangeCompletedAllItemsAction);
         subscribe(SwitchEditModeAction.class, this::processSwitchEditModeAction);
         subscribe(EditAction.class, this::processEditAction);
     }
 
-    private void processEditAction(EditAction action){
+    void processEditAction(EditAction action){
         items.stream()
                 .filter(item -> item.getId().equals(action.getItemId()))
                 .findAny()
@@ -48,7 +48,7 @@ public class ItemsStore implements Store {
     }
 
 
-    private void processSwitchEditModeAction(SwitchEditModeAction action) {
+    void processSwitchEditModeAction(SwitchEditModeAction action) {
         items.stream()
                 .filter(item -> item.getId().equals(action.getItemId()))
                 .findAny()
@@ -58,7 +58,7 @@ public class ItemsStore implements Store {
                 });
     }
 
-    private void processChangeStateAllItemsAction(ChangeStateForAllItemsAction action) {
+    void processChangeCompletedAllItemsAction(ChangeCompletedForAllItemsAction action) {
         selectAllCheckbox.push(action.isNewState());
         items
                 .stream()
@@ -71,7 +71,7 @@ public class ItemsStore implements Store {
         updateNumberOfItemsLeft();
     }
 
-    private void processDeleteItemAction(DeleteItemAction action) {
+    void processDeleteItemAction(DeleteItemAction action) {
         items
                 .stream()
                 .filter(item -> item.getId().equals(action.getId()))
@@ -81,7 +81,7 @@ public class ItemsStore implements Store {
         updateNumberOfItemsLeft();
     }
 
-    private void processAddItemAction(AddItemAction action) {
+    void processAddItemAction(AddItemAction action) {
         TodoItem newItem = new TodoItem(action.getText());
 
         items.add(newItem);
@@ -93,7 +93,7 @@ public class ItemsStore implements Store {
         updateNumberOfItemsLeft();
     }
 
-    private void processChangeStateSingleItemAction(ChangeStateForSingleItemAction action) {
+    void processChangeCompletedSingleItemAction(ChangeCompletedForSingleItemAction action) {
         items
                 .stream()
                 .filter(item -> item.getId().equals(action.getItemId()))
@@ -106,9 +106,10 @@ public class ItemsStore implements Store {
         selectAllCheckbox.push(false);
 
         updateNumberOfItemsLeft();
+        updateFilterPredicate();
     }
 
-    private void processChangeFilterAction(ChangeFilterAction action) {
+    void processChangeFilterAction(ChangeFilterAction action) {
         filterStatus = action.getVisibilityType();
         updateFilterPredicate();
     }
@@ -135,7 +136,7 @@ public class ItemsStore implements Store {
                 .count());
     }
 
-    public FilteredList<TodoItem> getItems() {
+    public ObservableList<TodoItem> getItems() {
         return filteredData;
     }
 

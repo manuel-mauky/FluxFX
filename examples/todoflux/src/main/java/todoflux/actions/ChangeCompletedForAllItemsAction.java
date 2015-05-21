@@ -2,11 +2,11 @@ package todoflux.actions;
 
 import eu.lestard.fluxfx.Action;
 
-public class ChangeStateForAllItemsAction implements Action {
+public class ChangeCompletedForAllItemsAction implements Action {
 
     private final boolean newState;
 
-    public ChangeStateForAllItemsAction(boolean newState) {
+    public ChangeCompletedForAllItemsAction(boolean newState) {
         this.newState = newState;
     }
 

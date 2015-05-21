@@ -7,7 +7,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import todoflux.actions.ChangeStateForSingleItemAction;
+import todoflux.actions.ChangeCompletedForSingleItemAction;
 import todoflux.actions.DeleteItemAction;
 import todoflux.actions.EditAction;
 import todoflux.actions.SwitchEditModeAction;
@@ -43,7 +43,7 @@ public class ItemView implements View {
         root.setOnMouseExited(event -> deleteButton.setVisible(false));
 
 
-        completed.setOnAction(event -> publishAction(new ChangeStateForSingleItemAction(id, completed.isSelected())));
+        completed.setOnAction(event -> publishAction(new ChangeCompletedForSingleItemAction(id, completed.isSelected())));
 
         contentLabel.setOnMouseClicked(event -> {
             if(event.getClickCount() > 1) {

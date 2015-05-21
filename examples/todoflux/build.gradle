@@ -8,4 +8,8 @@ dependencies {
     compile 'org.reactfx:reactfx:2.0-M4'
     compile "eu.lestard:easy-di:0.3.0"
     compile "de.jensd:fontawesomefx:8.3"
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'eu.lestard:assertj-javafx:0.3.0'
+    testCompile 'org.assertj:assertj-core:3.0.0'
 }
