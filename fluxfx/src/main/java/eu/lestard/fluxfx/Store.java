@@ -2,9 +2,9 @@ package eu.lestard.fluxfx;
 
 import java.util.function.Consumer;
 
-public interface Store {
+public abstract class Store {
 
-    default <T extends Action> void subscribe(Class<T> actionType, Consumer<T> actionConsumer) {
+    protected <T extends Action> void subscribe(Class<T> actionType, Consumer<T> actionConsumer) {
         Dispatcher.getInstance().getActionStream(actionType).subscribe(actionConsumer);
     }
 

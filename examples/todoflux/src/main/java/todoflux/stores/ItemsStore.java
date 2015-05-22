@@ -14,7 +14,7 @@ import todoflux.data.TodoItem;
 import javax.inject.Singleton;
 
 @Singleton
-public class ItemsStore implements Store {
+public class ItemsStore extends Store {
 
     private ObservableList<TodoItem> items = FXCollections.observableArrayList();
     private FilteredList<TodoItem> filteredData = new FilteredList<TodoItem>(items, s -> true);

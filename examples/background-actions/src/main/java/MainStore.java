@@ -4,7 +4,7 @@ import org.reactfx.EventStream;
 
 import java.time.LocalDateTime;
 
-public class MainStore implements Store {
+public class MainStore extends Store {
 
     private EventSource<LocalDateTime> dateTimeEventStream = new EventSource<>();
 
