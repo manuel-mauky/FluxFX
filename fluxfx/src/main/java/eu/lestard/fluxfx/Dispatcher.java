@@ -1,5 +1,7 @@
 package eu.lestard.fluxfx;
 
+import javafx.application.Platform;
+
 import org.reactfx.EventSource;
 import org.reactfx.EventStream;
 
@@ -17,7 +19,11 @@ public class Dispatcher {
     }
 
     public void dispatch(Action action) {
-        actionStream.push(action);
+        if(Platform.isFxApplicationThread()) {
+            actionStream.push(action);
+        } else {
+            Platform.runLater(() -> actionStream.push(action));
+        }
     }
 
     EventStream<Action> getActionStream(){

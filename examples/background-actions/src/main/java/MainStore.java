@@ -1,10 +1,12 @@
 import eu.lestard.fluxfx.Store;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ObservableStringValue;
+import org.reactfx.EventSource;
+import org.reactfx.EventStream;
+
+import java.time.LocalDateTime;
 
 public class MainStore implements Store {
 
-    private ReadOnlyStringWrapper value = new ReadOnlyStringWrapper("value");
+    private EventSource<LocalDateTime> dateTimeEventStream = new EventSource<>();
 
 
     public MainStore() {
@@ -12,11 +14,11 @@ public class MainStore implements Store {
     }
 
     void processUpdateAction(UpdateAction action) {
-        value.setValue(action.getValue());
+        dateTimeEventStream.push(action.getDateTime());
     }
 
-    public ObservableStringValue value() {
-        return value.getReadOnlyProperty();
+    public EventStream<LocalDateTime> dateTime() {
+        return dateTimeEventStream;
     }
 
 }

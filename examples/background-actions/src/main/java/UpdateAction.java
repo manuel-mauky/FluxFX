@@ -1,14 +1,16 @@
 import eu.lestard.fluxfx.Action;
 
+import java.time.LocalDateTime;
+
 public class UpdateAction implements Action {
 
-    private final String value;
+    private final LocalDateTime dateTime;
 
-    public UpdateAction(String value) {
-        this.value = value;
+    public UpdateAction(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
-    public String getValue() {
-        return value;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 }

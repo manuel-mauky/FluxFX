@@ -2,7 +2,11 @@ import eu.lestard.fluxfx.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+import java.time.format.DateTimeFormatter;
+
 public class MainView implements View {
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
 
     @FXML
     public Label valueLabel;
@@ -16,7 +20,7 @@ public class MainView implements View {
 
 
     public void initialize(){
-        valueLabel.textProperty().bind(store.value());
+        store.dateTime().subscribe(time -> valueLabel.setText(time.format(formatter)));
     }
 
 }

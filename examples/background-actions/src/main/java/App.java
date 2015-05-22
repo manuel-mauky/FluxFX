@@ -13,6 +13,8 @@ import java.util.TimerTask;
 
 public class App extends Application {
 
+    private Timer timer = new Timer();
+
     public static void main(String... args) {
         launch(args);
     }
@@ -25,20 +27,24 @@ public class App extends Application {
 
         final Parent root = ViewLoader.load(MainView.class);
 
-        stage.setScene(new Scene(root, 400, 200));
+        stage.setScene(new Scene(root, 500, 100));
+        stage.sizeToScene();
         stage.show();
 
-
-        Timer timer = new Timer();
 
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 final LocalDateTime now = LocalDateTime.now();
 
-                Dispatcher.getInstance().dispatch(new UpdateAction("" + now.getSecond()));
+                Dispatcher.getInstance().dispatch(new UpdateAction(now));
             }
-        }, 1000l);
+        }, 1l, 1000l);
+    }
 
+
+    @Override
+    public void stop() throws Exception {
+        timer.cancel();
     }
 }
