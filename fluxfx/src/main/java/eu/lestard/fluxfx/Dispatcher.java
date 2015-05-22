@@ -12,7 +12,7 @@ public class Dispatcher {
     private Dispatcher() {
     }
 
-    static Dispatcher getInstance() {
+    public static Dispatcher getInstance() {
         return SINGLETON;
     }
 
