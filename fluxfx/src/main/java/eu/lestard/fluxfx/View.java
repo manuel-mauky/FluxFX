@@ -4,6 +4,7 @@ package eu.lestard.fluxfx;
  * An interface that should be implemented by controllers of Views.
  *
  * This interface has two purposes:
+ *
  * - load a FXML file with a matching name via the {@link ViewLoader}. See there for more information.
  * - publish actions that can be handled by stores (see {@link #publishAction(Action)} method).
  *

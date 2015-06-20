@@ -10,7 +10,21 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    markdownDoclet
+}
 
 dependencies {
+    markdownDoclet 'ch.raffael.pegdown-doclet:pegdown-doclet:1.1.1'
+
     compile 'org.reactfx:reactfx:2.0-M4'
+}
+
+
+javadoc.options{
+    links "http://docs.oracle.com/javase/8/docs/api/", "http://docs.oracle.com/javase/8/javafx/api"
+
+    docletpath = configurations.markdownDoclet.files.asType(List)
+    doclet = "ch.raffael.doclets.pegdown.PegdownDoclet"
+    addStringOption("parse-timeout", "10")
 }

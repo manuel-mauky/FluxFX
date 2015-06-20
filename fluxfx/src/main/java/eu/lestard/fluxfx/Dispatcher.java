@@ -12,7 +12,7 @@ import org.reactfx.EventStream;
  * Views don't need to care about the dispatcher because there is a {@link View#publishAction(Action)} method in the {@link View}
  * interface that should be used to publish actions.
  *
- * Only external systems (f.e. backend services) that like to publish actions have to this dispatcher class.
+ * Only external systems (f.e. backend services) that like to publish actions have to use this dispatcher class.
  *
  */
 public class Dispatcher {
@@ -46,19 +46,18 @@ public class Dispatcher {
     }
 
     /**
-     * An eventstream contain all published actions.
-     * @return
+     * @return an event-stream of all published actions.
      */
     EventStream<Action> getActionStream(){
         return actionStream;
     }
 
     /**
-     * A filtered eventstream that contains only actions of the given type.
+     * A filtered event-stream of actions of the given type.
      *
      * @param actionType the class type of the action.
      * @param <T> the generic type of the action.
-     * @return an eventstream containing all actions of the given type.
+     * @return an event-stream of all actions of the given type.
      */
     @SuppressWarnings("unchecked")
     <T extends Action> EventStream<T> getActionStream(Class<T> actionType) {

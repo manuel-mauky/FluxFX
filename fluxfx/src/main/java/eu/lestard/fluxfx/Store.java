@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 public abstract class Store {
 
     /**
-     * This method can be used to subscribe to actions of a given type that are managed by the {@link Dispatcher}.
+     * This method can be used to subscribe to actions of a given type. The subscription is managed by the {@link Dispatcher}.
      *
      * @param actionType the class type of the action.
      * @param actionConsumer a consumer function that is invoked when an action is dispatched.

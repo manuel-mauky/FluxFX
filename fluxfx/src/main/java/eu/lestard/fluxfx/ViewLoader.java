@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
  *     ...
  * }
  * ```
+ *
  * ```xml
  * <?xml version="1.0" encoding="UTF-8"?>
  *     ...
@@ -81,6 +82,13 @@ public class ViewLoader {
 
     private static ResourceBundle resourceBundle;
 
+
+    /**
+     * Define a function that acts as dependency injection mechanism.
+     * This is similar to the "ControllerFactory" that can be defined for JavaFX {@link FXMLLoader} with {@link FXMLLoader#setControllerFactory(Callback)}.
+     *
+     * @param injector the injector function.
+     */
     public static void setDependencyInjector(Callback<Class<?>, Object> injector){
         ViewLoader.injector = injector;
     }
