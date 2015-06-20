@@ -1,9 +1,6 @@
 apply plugin: "java"
 apply plugin: "maven"
 
-group = "eu.lestard"
-version = "0.1"
-
 apply from: "maven_upload.gradle"
 
 repositories {
