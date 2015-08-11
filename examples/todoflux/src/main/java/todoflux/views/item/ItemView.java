@@ -11,7 +11,7 @@ import todoflux.actions.ChangeCompletedForSingleItemAction;
 import todoflux.actions.DeleteItemAction;
 import todoflux.actions.EditAction;
 import todoflux.actions.SwitchEditModeAction;
-import todoflux.data.TodoItem;
+import todoflux.stores.TodoItem;
 
 public class ItemView implements View {
 

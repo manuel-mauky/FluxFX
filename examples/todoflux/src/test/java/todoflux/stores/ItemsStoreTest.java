@@ -15,7 +15,6 @@ public class ItemsStoreTest {
     // To test the emitted values of the ReactFX EventStreams we use
     // stacks that will contain the values.
     private Stack<String> inputText = new Stack<>();
-    private Stack<String> idsToUpdate = new Stack<>();
     private Stack<Boolean> selectAllCheckbox = new Stack<>();
 
     @Before
@@ -25,7 +24,6 @@ public class ItemsStoreTest {
         clearEventStreams();
 
         store.inputText().subscribe(inputText::add);
-        store.itemIdsToUpdate().subscribe(idsToUpdate::add);
         store.selectAllCheckbox().subscribe(selectAllCheckbox::add);
     }
 
@@ -83,7 +81,6 @@ public class ItemsStoreTest {
 
         store.processEditAction(new EditAction(id, "hello world"));
         assertThat(store.getItems().get(0).getText()).isEqualTo("hello world");
-        assertThat(last(idsToUpdate)).isEqualTo(id);
     }
 
     @Test
@@ -99,7 +96,6 @@ public class ItemsStoreTest {
 
         assertThat(store.getItems().get(0).isEditMode()).isTrue();
 
-        assertThat(last(idsToUpdate)).isEqualTo(id);
     }
 
     @Test
@@ -122,7 +118,6 @@ public class ItemsStoreTest {
         assertThat(store.getItems().get(0).isCompleted()).isTrue();
         assertThat(store.getItems().get(1).isCompleted()).isFalse();
 
-        assertThat(last(idsToUpdate)).isEqualTo(id1);
         assertThat(last(selectAllCheckbox)).isFalse();
         assertThat(store.numberOfItemsLeft().get()).isEqualTo(1);
 
@@ -142,7 +137,6 @@ public class ItemsStoreTest {
         assertThat(store.getItems().get(0).isCompleted()).isFalse();
         assertThat(store.getItems().get(1).isCompleted()).isFalse();
 
-        assertThat(last(idsToUpdate)).isEqualTo(id1);
         assertThat(last(selectAllCheckbox)).isFalse();
         assertThat(store.numberOfItemsLeft().get()).isEqualTo(2);
     }
@@ -168,7 +162,6 @@ public class ItemsStoreTest {
         assertThat(store.getItems().get(0).isCompleted()).isTrue();
         assertThat(store.getItems().get(1).isCompleted()).isTrue();
 
-        assertThat(idsToUpdate).contains(id1, id2);
         assertThat(last(selectAllCheckbox)).isTrue();
         assertThat(store.numberOfItemsLeft().get()).isEqualTo(0);
 
@@ -215,7 +208,6 @@ public class ItemsStoreTest {
     }
 
     private void clearEventStreams() {
-        idsToUpdate.clear();
         selectAllCheckbox.clear();
         inputText.clear();
     }

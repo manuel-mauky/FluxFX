@@ -6,7 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import todoflux.data.TodoItem;
+import todoflux.stores.TodoItem;
 import todoflux.stores.ItemsStore;
 
 public class ItemOverviewView implements View {
@@ -26,13 +26,7 @@ public class ItemOverviewView implements View {
 
         ViewCellFactory<TodoItem, ItemView> cellFactory = new ViewCellFactory<>(ItemView.class, (todoItem, itemView) -> itemView.update(todoItem));
 
-
         items.setCellFactory(cellFactory);
-
-        itemStore.itemIdsToUpdate().subscribe(id ->
-                cellFactory.updateViews(item ->
-                        item.getId().equals(id)));
-
         items.setItems(itemStore.getItems());
     }
 

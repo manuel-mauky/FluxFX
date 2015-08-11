@@ -1,6 +1,7 @@
 package todoflux.stores;
 
 import eu.lestard.fluxfx.Store;
+import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.collections.FXCollections;
@@ -9,19 +10,20 @@ import javafx.collections.transformation.FilteredList;
 import org.reactfx.EventSource;
 import org.reactfx.EventStream;
 import todoflux.actions.*;
-import todoflux.data.TodoItem;
 
 import javax.inject.Singleton;
 
 @Singleton
 public class ItemsStore extends Store {
 
-    private ObservableList<TodoItem> items = FXCollections.observableArrayList();
+    private ObservableList<TodoItem> items = FXCollections.observableArrayList(
+            item -> new Observable[]{item.textProperty(), item.completedProperty(), item.editModeProperty()});
+
     private FilteredList<TodoItem> filteredData = new FilteredList<TodoItem>(items, s -> true);
     private ChangeFilterAction.VisibilityType filterStatus = ChangeFilterAction.VisibilityType.ALL;
 
     private EventSource<String> inputText = new EventSource<>();
-    private EventSource<String> itemIdsToUpdate = new EventSource<>();
+//    private EventSource<String> itemIdsToUpdate = new EventSource<>();
     private EventSource<Boolean> selectAllCheckbox = new EventSource<>();
 
     private ReadOnlyIntegerWrapper numberOfItemsLeft = new ReadOnlyIntegerWrapper();
@@ -43,7 +45,7 @@ public class ItemsStore extends Store {
                 .ifPresent(item -> {
                     item.setText(action.getNewText());
                     item.setEditMode(false);
-                    itemIdsToUpdate.push(item.getId());
+//                    itemIdsToUpdate.push(item.getId());
                 });
     }
 
@@ -54,7 +56,7 @@ public class ItemsStore extends Store {
                 .findAny()
                 .ifPresent(item -> {
                     item.setEditMode(action.isEditMode());
-                    itemIdsToUpdate.push(item.getId());
+//                    itemIdsToUpdate.push(item.getId());
                 });
     }
 
@@ -65,7 +67,7 @@ public class ItemsStore extends Store {
                 .filter(item -> item.isCompleted() != action.isNewState())
                 .forEach(item -> {
                     item.setCompleted(action.isNewState());
-                    itemIdsToUpdate.push(item.getId());
+//                    itemIdsToUpdate.push(item.getId());
                 });
         updateFilterPredicate();
         updateNumberOfItemsLeft();
@@ -100,7 +102,7 @@ public class ItemsStore extends Store {
                 .findAny()
                 .ifPresent(item -> {
                     item.setCompleted(action.getNewState());
-                    itemIdsToUpdate.push(item.getId());
+//                    itemIdsToUpdate.push(item.getId());
                 });
 
         selectAllCheckbox.push(false);
@@ -144,9 +146,9 @@ public class ItemsStore extends Store {
         return inputText;
     }
 
-    public EventStream<String> itemIdsToUpdate() {
-        return itemIdsToUpdate;
-    }
+//    public EventStream<String> itemIdsToUpdate() {
+////        return itemIdsToUpdate;
+////    }
 
     public EventStream<Boolean> selectAllCheckbox() {
         return selectAllCheckbox;
