@@ -83,20 +83,6 @@ public class ItemsStoreTest {
         assertThat(store.getItems().get(0).getText()).isEqualTo("hello world");
     }
 
-    @Test
-    public void testSwitchEditMode() {
-        store.processAddItemAction(new AddItemAction("hello"));
-        clearEventStreams();
-        final String id = store.getItems().get(0).getId();
-
-        assertThat(store.getItems().get(0).isEditMode()).isFalse();
-
-
-        store.processSwitchEditModeAction(new SwitchEditModeAction(id, true));
-
-        assertThat(store.getItems().get(0).isEditMode()).isTrue();
-
-    }
 
     @Test
     public void testChangeCompletedSingleItem() {

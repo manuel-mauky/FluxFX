@@ -16,7 +16,6 @@ public class TodoItem {
 
 	private ReadOnlyStringWrapper text = new ReadOnlyStringWrapper();
     private ReadOnlyBooleanWrapper completed = new ReadOnlyBooleanWrapper(false);
-    private ReadOnlyBooleanWrapper editMode = new ReadOnlyBooleanWrapper(false);
 
     public TodoItem(String text) {
         this.text.set(text);
@@ -52,15 +51,4 @@ public class TodoItem {
         return completed.getReadOnlyProperty();
     }
 
-    public boolean isEditMode() {
-        return editMode.getValue();
-    }
-
-    void setEditMode(boolean editMode) {
-        this.editMode.setValue(editMode);
-    }
-
-    public ReadOnlyBooleanProperty editModeProperty() {
-        return editMode.getReadOnlyProperty();
-    }
 }

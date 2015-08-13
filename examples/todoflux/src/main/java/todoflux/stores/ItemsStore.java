@@ -17,7 +17,7 @@ import javax.inject.Singleton;
 public class ItemsStore extends Store {
 
     private ObservableList<TodoItem> items = FXCollections.observableArrayList(
-            item -> new Observable[]{item.textProperty(), item.completedProperty(), item.editModeProperty()});
+            item -> new Observable[]{item.textProperty(), item.completedProperty()});
 
     private FilteredList<TodoItem> filteredData = new FilteredList<TodoItem>(items, s -> true);
     private ChangeFilterAction.VisibilityType filterStatus = ChangeFilterAction.VisibilityType.ALL;
@@ -34,7 +34,6 @@ public class ItemsStore extends Store {
         subscribe(ChangeCompletedForSingleItemAction.class, this::processChangeCompletedSingleItemAction);
         subscribe(ChangeFilterAction.class, this::processChangeFilterAction);
         subscribe(ChangeCompletedForAllItemsAction.class, this::processChangeCompletedAllItemsAction);
-        subscribe(SwitchEditModeAction.class, this::processSwitchEditModeAction);
         subscribe(EditAction.class, this::processEditAction);
     }
 
@@ -44,21 +43,9 @@ public class ItemsStore extends Store {
                 .findAny()
                 .ifPresent(item -> {
                     item.setText(action.getNewText());
-                    item.setEditMode(false);
-//                    itemIdsToUpdate.push(item.getId());
                 });
     }
 
-
-    void processSwitchEditModeAction(SwitchEditModeAction action) {
-        items.stream()
-                .filter(item -> item.getId().equals(action.getItemId()))
-                .findAny()
-                .ifPresent(item -> {
-                    item.setEditMode(action.isEditMode());
-//                    itemIdsToUpdate.push(item.getId());
-                });
-    }
 
     void processChangeCompletedAllItemsAction(ChangeCompletedForAllItemsAction action) {
         selectAllCheckbox.push(action.isNewState());
@@ -67,7 +54,6 @@ public class ItemsStore extends Store {
                 .filter(item -> item.isCompleted() != action.isNewState())
                 .forEach(item -> {
                     item.setCompleted(action.isNewState());
-//                    itemIdsToUpdate.push(item.getId());
                 });
         updateFilterPredicate();
         updateNumberOfItemsLeft();
@@ -102,7 +88,6 @@ public class ItemsStore extends Store {
                 .findAny()
                 .ifPresent(item -> {
                     item.setCompleted(action.getNewState());
-//                    itemIdsToUpdate.push(item.getId());
                 });
 
         selectAllCheckbox.push(false);
@@ -145,10 +130,6 @@ public class ItemsStore extends Store {
     public EventStream<String> inputText() {
         return inputText;
     }
-
-//    public EventStream<String> itemIdsToUpdate() {
-////        return itemIdsToUpdate;
-////    }
 
     public EventStream<Boolean> selectAllCheckbox() {
         return selectAllCheckbox;

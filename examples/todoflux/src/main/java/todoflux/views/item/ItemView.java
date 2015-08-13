@@ -1,6 +1,8 @@
 package todoflux.views.item;
 
 import eu.lestard.fluxfx.View;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -10,7 +12,6 @@ import javafx.scene.layout.HBox;
 import todoflux.actions.ChangeCompletedForSingleItemAction;
 import todoflux.actions.DeleteItemAction;
 import todoflux.actions.EditAction;
-import todoflux.actions.SwitchEditModeAction;
 import todoflux.stores.TodoItem;
 
 public class ItemView implements View {
@@ -36,6 +37,8 @@ public class ItemView implements View {
 
     private String id;
 
+    // state
+    private BooleanProperty editMode = new SimpleBooleanProperty();
 
     public void initialize() {
         deleteButton.setVisible(false);
@@ -47,17 +50,24 @@ public class ItemView implements View {
 
         contentLabel.setOnMouseClicked(event -> {
             if(event.getClickCount() > 1) {
-                publishAction(new SwitchEditModeAction(id, true));
+                editMode.setValue(true);
             }
         });
 
         contentInput.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!newValue){
-                publishAction(new SwitchEditModeAction(id, false));
+                editMode.setValue(false);
             }
         });
 
-        contentInput.setOnAction(event -> publishAction(new EditAction(id, contentInput.getText())));
+        contentInput.setOnAction(event -> {
+            publishAction(new EditAction(id, contentInput.getText()));
+            editMode.setValue(false);
+        });
+
+        editMode.addListener((observable, oldValue, newValue) -> {
+            initEditMode(newValue);
+        });
     }
 
     public void update(TodoItem item) {
@@ -65,14 +75,12 @@ public class ItemView implements View {
         contentLabel.setText(item.getText());
         contentInput.setText(item.getText());
         completed.setSelected(item.isCompleted());
-        if(item.isCompleted()) {
+        if (item.isCompleted()) {
             contentLabel.getStyleClass().add(STRIKETHROUGH_CSS_CLASS);
         } else {
             contentLabel.getStyleClass().remove(STRIKETHROUGH_CSS_CLASS);
         }
 
-
-        initEditMode(item.isEditMode());
     }
 
     private void initEditMode(boolean editMode){
