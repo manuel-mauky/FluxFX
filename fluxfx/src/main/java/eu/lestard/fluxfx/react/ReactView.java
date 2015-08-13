@@ -21,9 +21,14 @@ public interface ReactView extends View, Initializable {
         return () -> {};
     }
 
+    default void componentDidMount() {}
+
     @Override
     default void initialize(URL location, ResourceBundle resources) {
         getInitialState().run();
+
+        componentDidMount();
+
         render();
     }
 }

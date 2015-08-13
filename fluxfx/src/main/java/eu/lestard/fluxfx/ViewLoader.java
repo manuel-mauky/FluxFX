@@ -120,10 +120,11 @@ public class ViewLoader {
     }
 
     private static FXMLLoader createFxmlLoader(Class<? extends View> viewClass) {
-        final URL fxmlPath = ViewLoader.class.getResource(createFxmlPath(viewClass));
+        final String fxmlPathAsString = createFxmlPath(viewClass);
+        final URL fxmlPath = ViewLoader.class.getResource(fxmlPathAsString);
 
         if(fxmlPath == null) {
-            throw new IllegalArgumentException("Can't load View " + viewClass);
+            throw new IllegalArgumentException("Can't load View " + viewClass + ". FXML File not found under:" + fxmlPathAsString);
         }
 
         FXMLLoader fxmlLoader = new FXMLLoader(fxmlPath);
