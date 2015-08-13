@@ -78,7 +78,7 @@ public class ItemView implements View {
         if (item.isCompleted()) {
             contentLabel.getStyleClass().add(STRIKETHROUGH_CSS_CLASS);
         } else {
-            contentLabel.getStyleClass().remove(STRIKETHROUGH_CSS_CLASS);
+            contentLabel.getStyleClass().removeAll(STRIKETHROUGH_CSS_CLASS);
         }
 
     }

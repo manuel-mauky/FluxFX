@@ -23,7 +23,6 @@ public class ItemsStore extends Store {
     private ChangeFilterAction.VisibilityType filterStatus = ChangeFilterAction.VisibilityType.ALL;
 
     private EventSource<String> inputText = new EventSource<>();
-//    private EventSource<String> itemIdsToUpdate = new EventSource<>();
     private EventSource<Boolean> selectAllCheckbox = new EventSource<>();
 
     private ReadOnlyIntegerWrapper numberOfItemsLeft = new ReadOnlyIntegerWrapper();
