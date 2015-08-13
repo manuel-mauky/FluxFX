@@ -12,8 +12,10 @@ public class CounterView implements ReactView {
 
 
     @Override
-    public void setInitialState() {
-        countValue = 0;
+    public Runnable getInitialState() {
+        return () -> {
+            countValue = 1;
+        };
     }
 
 

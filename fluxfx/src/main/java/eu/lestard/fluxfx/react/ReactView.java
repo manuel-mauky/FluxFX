@@ -17,10 +17,13 @@ public interface ReactView extends View, Initializable {
         render();
     }
 
-    default void setInitialState() {}
+    default Runnable getInitialState() {
+        return () -> {};
+    }
 
     @Override
     default void initialize(URL location, ResourceBundle resources) {
+        getInitialState().run();
         render();
     }
 }
