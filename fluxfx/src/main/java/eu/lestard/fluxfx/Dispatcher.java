@@ -48,7 +48,7 @@ public class Dispatcher {
     /**
      * @return an event-stream of all published actions.
      */
-    EventStream<Action> getActionStream(){
+    public EventStream<Action> getActionStream(){
         return actionStream;
     }
 
