@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="counterapp.views.CounterView">
+    <HBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Button mnemonicParsing="false" onAction="#decrease" text="&lt;" />
+        <Label fx:id="valueLabel" prefWidth="100.0" text="Value">
+            <font>
+                <Font size="25.0" />
+            </font>
+        </Label>
+        <Button mnemonicParsing="false" onAction="#increase" text="&gt;" />
+        <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+        </padding>
+    </HBox>
+</AnchorPane>

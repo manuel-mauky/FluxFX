@@ -1,3 +1,9 @@
 rootProject.name = 'FluxFX'
 
-include "fluxfx","examples:todoflux", "examples:background-actions", "examples:notesapp", "examples:reactlike_counter", "examples:reactlike_todoflux"
+include "fluxfx"
+include "examples:todoflux"
+include "examples:background-actions"
+include "examples:notesapp"
+include "examples:reactlike_counter"
+include "examples:reactlike_todoflux"
+include "examples:counter"
