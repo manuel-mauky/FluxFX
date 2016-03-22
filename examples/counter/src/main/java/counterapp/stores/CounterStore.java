@@ -1,33 +1,37 @@
 package counterapp.stores;
 
-import counterapp.actions.DecreaseCounterAction;
-import counterapp.actions.IncreaseCounterAction;
-import eu.lestard.fluxfx.Store;
-import javafx.beans.property.IntegerProperty;
+import counterapp.actions.DecreaseAction;
+import counterapp.actions.IncreaseAction;
+import eu.lestard.fluxfx.Action;
 import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import org.reactfx.EventStream;
 
-public class CounterStore extends Store {
+public class CounterStore {
 
-    private IntegerProperty counter = new SimpleIntegerProperty();
+    private ReadOnlyIntegerWrapper counter = new ReadOnlyIntegerWrapper();
 
+    public CounterStore(EventStream<Action> eventStream) {
+        eventStream.filter(a -> a instanceof IncreaseAction)
+                .cast(IncreaseAction.class)
+                .subscribe(this::increase);
 
-    public CounterStore() {
-        subscribe(IncreaseCounterAction.class, this::increase);
-        subscribe(DecreaseCounterAction.class, this::decrease);
+        eventStream.filter(a -> a instanceof DecreaseAction)
+                .cast(DecreaseAction.class)
+                .subscribe(this::decrease);
     }
 
 
-    private void decrease(DecreaseCounterAction action) {
+    private void decrease(DecreaseAction action) {
         counter.setValue(counter.get() - action.getAmount());
     }
 
-    private void increase(IncreaseCounterAction action) {
+    private void increase(IncreaseAction action) {
         counter.setValue(counter.get() + action.getAmount());
     }
 
     public ReadOnlyIntegerProperty counter() {
-        return counter;
+        return counter.getReadOnlyProperty();
     }
 
 }

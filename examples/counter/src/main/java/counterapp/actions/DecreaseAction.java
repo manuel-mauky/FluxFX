@@ -2,11 +2,11 @@ package counterapp.actions;
 
 import eu.lestard.fluxfx.Action;
 
-public class IncreaseCounterAction implements Action {
+public class DecreaseAction implements Action {
 
     private final int amount;
 
-    public IncreaseCounterAction(int amount) {
+    public DecreaseAction(int amount) {
         this.amount = amount;
     }
 

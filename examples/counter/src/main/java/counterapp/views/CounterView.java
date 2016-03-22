@@ -1,12 +1,14 @@
 package counterapp.views;
 
-import counterapp.actions.DecreaseCounterAction;
-import counterapp.actions.IncreaseCounterAction;
+import counterapp.actions.DecreaseAction;
+import counterapp.actions.IncreaseAction;
 import counterapp.stores.CounterStore;
+import eu.lestard.fluxfx.Action;
 import eu.lestard.fluxfx.View;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import org.reactfx.EventSource;
 
 public class CounterView implements View {
 
@@ -15,8 +17,11 @@ public class CounterView implements View {
 
     private final CounterStore store;
 
-    public CounterView(CounterStore store) {
+    private final EventSource<Action> actionStream;
+
+    public CounterView(CounterStore store, EventSource<Action> actionStream) {
         this.store = store;
+        this.actionStream = actionStream;
     }
 
     public void initialize() {
@@ -24,10 +29,10 @@ public class CounterView implements View {
     }
 
     public void decrease() {
-        publishAction(new DecreaseCounterAction(1));
+        actionStream.push(new DecreaseAction(1));
     }
 
     public void increase() {
-        publishAction(new IncreaseCounterAction(1));
+        actionStream.push(new IncreaseAction(1));
     }
 }

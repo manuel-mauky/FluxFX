@@ -6,13 +6,16 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="counterapp.views.CounterView">
-    <HBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="counterapp.views.CounterView">
+    <HBox maxWidth="1.7976931348623157E308" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Button mnemonicParsing="false" onAction="#decrease" text="&lt;" />
-        <Label fx:id="valueLabel" prefWidth="100.0" text="Value">
+        <Label fx:id="valueLabel" maxWidth="1.7976931348623157E308" minWidth="120.0" text="Value" HBox.hgrow="ALWAYS">
             <font>
                 <Font size="25.0" />
             </font>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
         </Label>
         <Button mnemonicParsing="false" onAction="#increase" text="&gt;" />
         <padding>
