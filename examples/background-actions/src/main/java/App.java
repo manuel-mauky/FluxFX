@@ -37,7 +37,7 @@ public class App extends Application {
             public void run() {
                 final LocalDateTime now = LocalDateTime.now();
 
-                Dispatcher.getInstance().dispatch(new UpdateAction(now));
+                Dispatcher.getInstance().dispatchOnFxThread(new UpdateAction(now));
             }
         }, 1l, 1000l);
     }

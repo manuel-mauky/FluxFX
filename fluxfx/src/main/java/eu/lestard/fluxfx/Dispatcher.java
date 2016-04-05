@@ -37,12 +37,21 @@ public class Dispatcher {
      *
      * @param action the action that will be dispatched to the stores.
      */
-    public void dispatch(Action action) {
+    public void dispatchOnFxThread(Action action) {
         if(Platform.isFxApplicationThread()) {
             actionStream.push(action);
         } else {
             Platform.runLater(() -> actionStream.push(action));
         }
+    }
+
+    /**
+     * Dispatch the given action.
+     *
+     * @param action the action that will be dispatched to the stores.
+     */
+    public void dispatch(Action action) {
+        actionStream.push(action);
     }
 
     /**

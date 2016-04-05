@@ -1,6 +1,7 @@
 package todoflux.views.additems;
 
 import eu.lestard.fluxfx.View;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -27,6 +28,8 @@ public class AddItemsView implements View {
 
         itemStore.selectAllCheckbox().subscribe(selectAll::setSelected);
         selectAll.setOnAction(event -> publishAction(new ChangeCompletedForAllItemsAction(selectAll.isSelected())));
+
+        selectAll.visibleProperty().bind(Bindings.isNotEmpty(itemStore.getItems()));
     }
 
 }

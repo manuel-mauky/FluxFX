@@ -40,20 +40,16 @@ public class ItemsStore extends Store {
         items.stream()
                 .filter(item -> item.getId().equals(action.getItemId()))
                 .findAny()
-                .ifPresent(item -> {
-                    item.setText(action.getNewText());
-                });
+                .ifPresent(item -> item.setText(action.getNewText()));
     }
 
 
     void processChangeCompletedAllItemsAction(ChangeCompletedForAllItemsAction action) {
         selectAllCheckbox.push(action.isNewState());
-        items
-                .stream()
+        items.stream()
                 .filter(item -> item.isCompleted() != action.isNewState())
-                .forEach(item -> {
-                    item.setCompleted(action.isNewState());
-                });
+                .forEach(item -> item.setCompleted(action.isNewState()));
+
         updateFilterPredicate();
         updateNumberOfItemsLeft();
     }
@@ -64,6 +60,9 @@ public class ItemsStore extends Store {
                 .filter(item -> item.getId().equals(action.getId()))
                 .findAny()
                 .ifPresent(items::remove);
+
+        selectAllCheckbox.push(items.stream()
+                .allMatch(TodoItem::isCompleted));
 
         updateNumberOfItemsLeft();
     }
@@ -85,11 +84,10 @@ public class ItemsStore extends Store {
                 .stream()
                 .filter(item -> item.getId().equals(action.getItemId()))
                 .findAny()
-                .ifPresent(item -> {
-                    item.setCompleted(action.getNewState());
-                });
+                .ifPresent(item -> item.setCompleted(action.getNewState()));
 
-        selectAllCheckbox.push(false);
+        selectAllCheckbox.push(items.stream()
+                .allMatch(TodoItem::isCompleted));
 
         updateNumberOfItemsLeft();
         updateFilterPredicate();

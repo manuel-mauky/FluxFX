@@ -23,7 +23,7 @@ public class App extends Application {
 
         final Parent parent = ViewLoader.load(MainView.class);
 
-        stage.setScene(new Scene(parent));
+        stage.setScene(new Scene(parent, 500, 600));
         stage.show();
     }
 }
