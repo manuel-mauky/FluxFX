@@ -1,6 +1,7 @@
 package todoflux.views.controls;
 
 import eu.lestard.fluxfx.View;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import todoflux.actions.ChangeFilterAction;
@@ -19,7 +20,7 @@ public class ControlsView implements View {
     }
 
     public void initialize(){
-        itemsLeftLabel.textProperty().bind(itemsStore.numberOfItemsLeft().asString());
+        itemsLeftLabel.textProperty().bind(Bindings.concat(itemsStore.numberOfItemsLeft(), " items left"));
     }
 
     public void all() {
