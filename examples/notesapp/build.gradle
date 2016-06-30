@@ -3,4 +3,7 @@ apply plugin: "java"
 
 dependencies {
     compile project(":fluxfx")
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.assertj:assertj-core:3.0.0'
 }

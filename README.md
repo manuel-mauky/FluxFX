@@ -163,7 +163,7 @@ The intersting part is the `initialize` method. This method will be called autom
 is loaded. With the statement `list.setItems(store.getNotes());` the `ListView` will show the notes from the Store.
 As the notes list is observable the ListView will update itself automatically when the state in the store is changed.
 
-Another thing to note is that we implement the `eu.lestard.fluxfx.View` interface. In the next steps we will see why.
+Another thing to notice is that we implement the `eu.lestard.fluxfx.View` interface. In the next steps we will see why.
 
 ##### Define an Action to add notes
 
@@ -213,7 +213,7 @@ The `View` interface has a method `publishAction` that we are using to bring our
 
 ##### Process the action in the store
 
-In our store implementation we can subscribe to our action and make the needed changed to the applications state.
+In our store we can subscribe to our action and perform the needed changes to the applications state.
 
 ```java
 public class NotesStore extends Store {
@@ -238,19 +238,18 @@ In the constructor we use the `subscribe` method from the `Store` class.
 The first param is the class type of the action we are interested in.
 The second param is a `Consumer` function that is processing the incoming action.
 
-With Java8 of cause we can use a lambda instead of the anonymous inner class for the consumer.
-Even better is to create a method in the store and use a method reference in
+With Java8 of cause we can use a **lambda** instead of the anonymous inner class for the consumer.
+Even better is to create a method in the store and use a **method reference** in
 the subscribe statement.
-The method shouldn't be `public` to prevent a direct invokation from outside of the store.
-Instead I recomment to use the default scope (no access modifier) which makes unit-testing
-realy easy:
+The method should be `private` or package scope (no access modifier) to prevent direct
+invocation from outside of the store:
 
 ```java
 public NotesStore() {
     subscribe(AddNoteAction.class, this::processAddNoteAction);
 }
 
-protected void processAddNoteAction(AddNoteAction action) {
+private void processAddNoteAction(AddNoteAction action) {
     final String noteText = action.getNoteText();
 
     if(noteText != null && !noteText.trim().isEmpty()) {
@@ -262,7 +261,9 @@ protected void processAddNoteAction(AddNoteAction action) {
 ##### Create an application class and load the View
 
 The last step is to create an application class with a `main` method and load the FXML file.
-This can be done with the `ViewLoader` class from FluxFX like this:
+If your FXML file has the same name as the View class (except for the file ending of cause)
+and is contained in the same package, you can use the `ViewLoader` class from FluxFX
+to load it like this:
 
 ```java
 package notesapp;
@@ -288,5 +289,94 @@ public class App extends Application {
     }
 }
 ```
+
+
+##### Testing
+
+Testing code is crucial for real applications. With flux architecture
+most logic is located in the store so let's write a unit test for our store.
+If you are a fan of test-driven-design you could write the test even before implementing the store.
+
+```java
+import eu.lestard.fluxfx.Dispatcher;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class NotesStoreTest {
+
+	private NotesStore store;
+
+	@Before
+	public void setup() {
+		store = new NotesStore();
+	}
+
+	@Test
+	public void testAddASingleNote() {
+
+		// given
+		assertThat(store.getNotes()).isEmpty();
+
+		// when
+		Dispatcher.getInstance().dispatch(new AddNoteAction("something"));
+
+		// then
+		assertThat(store.getNotes()).contains("something");
+	}
+
+	@Test
+	public void testAddMultipleNotes() {
+
+		// given
+		assertThat(store.getNotes()).isEmpty();
+
+		// when
+		Dispatcher.getInstance().dispatch(new AddNoteAction("something"));
+		Dispatcher.getInstance().dispatch(new AddNoteAction("second"));
+		Dispatcher.getInstance().dispatch(new AddNoteAction("third"));
+
+		// then
+		assertThat(store.getNotes()).containsExactly("something", "second", "third");
+	}
+
+	@Test
+	public void testAddEmptyNotes() {
+		// given
+		assertThat(store.getNotes()).isEmpty();
+
+
+		// when
+		Dispatcher.getInstance().dispatch(new AddNoteAction(""));
+		// then
+		assertThat(store.getNotes()).isEmpty();
+
+
+		// when
+		Dispatcher.getInstance().dispatch(new AddNoteAction(null));
+		// then
+		assertThat(store.getNotes()).isEmpty();
+
+
+		// when
+		Dispatcher.getInstance().dispatch(new AddNoteAction("    "));
+		// then
+		assertThat(store.getNotes()).isEmpty();
+	}
+}
+
+```
+
+In the example I'm using [JUnit](http://junit.org/junit4/) and [AssertJ](https://joel-costigliola.github.io/assertj/) for testing.
+As there is no View available
+in a Unit-Test we are directly using the `Dispatcher` to create new Actions.
+The `publishAction` method that we have seen above in the View class is just a shortcut that delegates
+the actions to the singleton Dispatcher in the same way.
+
+If we had made our `processAddNoteAction` method in the store to be package scoped we could use it directly
+in the test class and could skip the Dispatcher.
+It's up to you which option you choose.
+
 
 The complete code for this example can be seen in [the repository](/examples/notesapp).

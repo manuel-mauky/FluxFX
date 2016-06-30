@@ -12,7 +12,7 @@ public class NotesStore extends Store {
         subscribe(AddNoteAction.class, this::processAddNoteAction);
     }
 
-    protected void processAddNoteAction(AddNoteAction action) {
+    private void processAddNoteAction(AddNoteAction action) {
         final String noteText = action.getNoteText();
 
         if(noteText != null && !noteText.trim().isEmpty()) {
