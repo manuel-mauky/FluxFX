@@ -28,32 +28,41 @@ public class ContactsStore extends Store {
     }
 
     public ContactsStore() {
-        subscribe(AddContactAction.class, (addContactAction) -> {
+        subscribe(AddContactAction.class,
 
-                final String fn = addContactAction.getFirstName();
-                final String ln = addContactAction.getLastName();
+                  (addContactAction) -> {
 
-                Task<Void> task = new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        updateMessage("Saving new contact");
-                        updateProgress(0.5d, 1.0d);
-                        simulateTimeConsumingOp();  // actually do the backend saving
-                        return null;
+                      /**
+                       * Start a Task to save the data.  Upon successful completion, add the Contact to the model.
+                       * Prior to starting the Task, send a reference to allow interested parties to bind JavaFX
+                       * controls to the Task.
+                       */
+
+                        final String fn = addContactAction.getFirstName();
+                        final String ln = addContactAction.getLastName();
+
+
+                        Task<Void> task = new Task<Void>() {
+                            @Override
+                            protected Void call() throws Exception {
+                                updateMessage("Saving new contact");
+                                updateProgress(0.5d, 1.0d);
+                                simulateTimeConsumingOp();  // actually do the backend saving
+                                return null;
+                            }
+
+                            @Override
+                            protected void succeeded() {
+                                contacts.add( new Contact(fn, ln) );  // updates the UI on fx thread
+                            }
+                        };
+
+                        Dispatcher.getInstance().dispatch(
+                            new BindTaskToProgressAction<>(task)
+                        );
+
+                        new Thread(task).start();
                     }
-
-                    @Override
-                    protected void succeeded() {
-                        contacts.add( new Contact(fn, ln) );  // updates the UI on fx thread
-                    }
-                };
-
-                Dispatcher.getInstance().dispatch(
-                    new BindTaskToProgressAction<>(task)
-                );
-
-                new Thread(task).start();
-            }
         );
     }
 

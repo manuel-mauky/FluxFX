@@ -10,6 +10,11 @@ import javafx.scene.layout.HBox;
 
 import java.util.function.Consumer;
 
+/**
+ * The sole FluxFX View for the Application
+ *
+ * @author carl
+ */
 public class ContactsView implements View {
 
     @FXML

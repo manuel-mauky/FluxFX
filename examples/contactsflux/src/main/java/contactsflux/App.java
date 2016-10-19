@@ -12,6 +12,10 @@ import javafx.stage.Stage;
 /**
  * JavaFX Application subclass; main entry point
  *
+ * This is a demonstration of the FluxFX framework supplemented with JavaFX Tasks to keep the application lively and
+ * give the user feedback on long-running operations.  There are a few HTTP calls that are added to give the
+ * application a real-world feel.
+ *
  * @author carl
  */
 public class App extends Application {
@@ -33,22 +37,28 @@ public class App extends Application {
 
                 (evt) -> {
 
-                     Task<ObservableList<Contact>> task = new Task<ObservableList<Contact>>() {
-                         @Override
-                         protected ObservableList<Contact> call() throws Exception {
-                             updateMessage("Loading contacts");
-                             updateProgress(0.5d, 1.0d);
-                             return contactsStore.getContacts();
-                         }
+                    //
+                    // Start a Task to retrieve the Contact object
+                    //
+                    // Prior to starting the Task, send a reference to interested parties who can bind JavaFX
+                    // controls to the Task.  When finished, send a notification to listeners with the data.
+                    //
 
-                         @Override
-                         protected void succeeded() {
-                             Dispatcher.getInstance().dispatch(
-                                     new InitContactsViewAction(getValue())
-                             );
-                         }
-                     };
+                    Task<ObservableList<Contact>> task = new Task<ObservableList<Contact>>() {
+                        @Override
+                        protected ObservableList<Contact> call() throws Exception {
+                            updateMessage("Loading contacts");
+                            updateProgress(0.5d, 1.0d);
+                            return contactsStore.getContacts();
+                        }
 
+                        @Override
+                        protected void succeeded() {
+                            Dispatcher.getInstance().dispatch(
+                                    new InitContactsViewAction(getValue())
+                            );
+                        }
+                    };
                     Dispatcher.getInstance().dispatch(
                             new BindTaskToProgressAction<>(task)
                     );
