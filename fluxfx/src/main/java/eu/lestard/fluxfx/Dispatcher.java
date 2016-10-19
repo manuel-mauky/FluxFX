@@ -69,7 +69,7 @@ public class Dispatcher {
      * @return an event-stream of all actions of the given type.
      */
     @SuppressWarnings("unchecked")
-    <T extends Action> EventStream<T> getActionStream(Class<T> actionType) {
+    public <T extends Action> EventStream<T> getActionStream(Class<T> actionType) {
         return Dispatcher.getInstance()
                 .getActionStream()
                 .filter(action -> action.getClass().equals(actionType))
