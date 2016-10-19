@@ -2,6 +2,11 @@ package contactsflux;
 
 import eu.lestard.fluxfx.Action;
 
+/**
+ * A FluxFX Action to add a Contact record
+ *
+ * @author carl
+ */
 public class AddContactAction implements Action {
 
     private final String firstName;

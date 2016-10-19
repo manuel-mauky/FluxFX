@@ -1,5 +1,10 @@
 package contactsflux;
 
+/**
+ * Domain object
+ *
+ * @author carl
+ */
 public class Contact {
 
     private String firstName;

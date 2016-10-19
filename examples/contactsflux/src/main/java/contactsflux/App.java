@@ -9,6 +9,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * JavaFX Application subclass; main entry point
+ *
+ * @author carl
+ */
 public class App extends Application {
 
     @Override

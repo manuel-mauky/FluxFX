@@ -10,9 +10,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * A FluxFX Store; simulates data retrieval and persistence
+ *
+ * @author carl
+ */
 public class ContactsStore extends Store {
 
-    private ObservableList<Contact> contacts = FXCollections.observableArrayList();
+    private final ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
     public ObservableList<Contact> getContacts() {
 
