@@ -39,19 +39,6 @@ public class ContactsView implements View {
 
         tcFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-
-        subscribe(InitContactsViewAction.class,
-                  (initContactsViewAction) ->
-                      tblContacts.setItems( initContactsViewAction.getContacts() )  // fx thread?
-            );
-
-        subscribe(BindTaskToProgressAction.class,
-                  (bindTaskToProgressAction) -> {
-                      statusHBox.visibleProperty().bind(bindTaskToProgressAction.getTask().runningProperty());
-                      pb.progressProperty().bind(bindTaskToProgressAction.getTask().progressProperty());
-                      statusLabel.textProperty().bind(bindTaskToProgressAction.getTask().messageProperty());
-                  }
-        );
     }
 
     @FXML
@@ -61,12 +48,5 @@ public class ContactsView implements View {
 
         tfFirstName.clear();
         tfLastName.clear();
-    }
-
-    //
-    // A helper method b/c subscribe is defined in Store, not View
-    //
-    private <T extends Action> void subscribe(Class<T> actionType, Consumer<T> actionConsumer) {
-        Dispatcher.getInstance().getActionStream(actionType).subscribe(actionConsumer);
     }
 }
