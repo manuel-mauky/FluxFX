@@ -1,6 +1,7 @@
 package contactsflux;
 
 import eu.lestard.fluxfx.react.ReactView;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,12 +29,19 @@ public class ContactsView extends VBox implements ReactView {
     @FXML
     private TableColumn<Contact, String> tcFirstName, tcLastName;
 
-    /**
-     * The Controller-View state, currently trivial because of the one-to-one correspondance with TableView.items but
-     * "state" could be a more complex data structure, say a Task status in addition to the ObservableList for a
-     * ProgressBar
-     */
-    private ObservableList<Contact> state = FXCollections.observableArrayList();
+    @FXML
+    private HBox statusHBox;
+
+    @FXML
+    private ProgressBar pb;
+
+    @FXML
+    private Label statusLabel;
+
+    @FXML
+    private Button btnAdd;
+
+    private ContactsViewState state = new ContactsViewState();
 
     /**
      * A reference to the @Singleton Store for retrieving information (when notified)
@@ -42,8 +50,19 @@ public class ContactsView extends VBox implements ReactView {
 
     /**
      * A listener for updating the state of the Controller-View
+     *
+     * Needs FX thread safety b/c could be called from long-running Thread off the FX Thread
      */
-    private final Runnable changeListener = () -> setState(() -> state = store.getContacts());
+    private final Runnable changeListener = () ->
+            Platform.runLater(() ->
+            setState(
+            () -> {
+                state.running = store.isRunning();
+                state.progress = store.getProgress();
+                state.message = store.getMessage();
+                state.contacts = store.getContacts();
+            }
+    ));
 
     @FXML
     public void add() {
@@ -56,11 +75,33 @@ public class ContactsView extends VBox implements ReactView {
 
     @Override
     public void render() {
-        tblContacts.setItems(state);
+
+        if( state.running ) {
+            statusHBox.setVisible(true);
+            pb.setProgress( state.progress );
+            statusLabel.setText( state.message );
+        } else {
+            statusHBox.setVisible(false);
+            pb.setProgress( 0.0d );
+            statusLabel.setText( "" );
+        }
+
+        tblContacts.setItems(state.contacts);
     }
 
+    /**
+     * Runs from FXMLLoader initialize, so doesn't need Platform.runLater() b/c on FX Thread already
+     *
+     * @return
+     */
     @Override
-    public Runnable getInitialState() { return () -> store.getContacts(); }
+    public Runnable getInitialState() { return () -> {
+        state.running = store.isRunning();
+        state.progress = store.getProgress();
+        state.message = store.getMessage();
+        state.contacts = store.getContacts();
+    };
+    }
 
     @Override
     public void componentDidMount() {
@@ -78,13 +119,25 @@ public class ContactsView extends VBox implements ReactView {
         //
         // Note that because this is a default interface method, there is no overriding (just complete replacement)
         //
+
         tcFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tcLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+
+        btnAdd.disableProperty().bind( tfFirstName.textProperty().isEmpty().and( tfLastName.textProperty().isEmpty() ));
 
         getInitialState().run();
 
         componentDidMount();
 
         render();
+    }
+
+    static class ContactsViewState {
+
+        boolean running = false;
+        String message = "";
+        Double progress = 0.0d;
+        ObservableList<Contact> contacts = FXCollections.observableArrayList();
+
     }
 }
