@@ -1,6 +1,5 @@
 package contactsflux;
 
-import eu.lestard.fluxfx.Dispatcher;
 import eu.lestard.fluxfx.Store;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +8,8 @@ import javafx.concurrent.Task;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A FluxFX Store; simulates data retrieval and persistence
@@ -20,14 +21,31 @@ public class ContactsStore extends Store {
     private final ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
     public ObservableList<Contact> getContacts() {
-
-        simulateTimeConsumingOp();
-        contacts.add( new Contact("Initial", "Contact"));  // test data
-
         return contacts;
     }
 
     public ContactsStore() {
+
+        subscribe(FetchContactsAction.class,
+                  (fetchContactsAction) -> {
+                      Task<List<Contact>> task = new Task<List<Contact>>() {
+                          @Override
+                          protected List<Contact> call() throws Exception {
+                              simulateTimeConsumingOp();
+                              List<Contact> fromDB = new ArrayList<>();
+                              fromDB.add( new Contact("Initial", "Contact"));  // test data
+                              return fromDB;
+                          }
+                          @Override
+                          protected void succeeded() {
+                              super.succeeded();
+                              contacts.addAll( getValue() );
+                              onChange();
+                          }
+                      };
+                      new Thread(task).start();
+                  });
+
         subscribe(AddContactAction.class,
 
                   (addContactAction) -> {
@@ -41,7 +59,6 @@ public class ContactsStore extends Store {
                         final String fn = addContactAction.getFirstName();
                         final String ln = addContactAction.getLastName();
 
-
                         Task<Void> task = new Task<Void>() {
                             @Override
                             protected Void call() throws Exception {
@@ -54,12 +71,9 @@ public class ContactsStore extends Store {
                             @Override
                             protected void succeeded() {
                                 contacts.add( new Contact(fn, ln) );  // updates the UI on fx thread
+                                onChange();
                             }
                         };
-
-                        Dispatcher.getInstance().dispatch(
-                            new BindTaskToProgressAction<>(task)
-                        );
 
                         new Thread(task).start();
                     }

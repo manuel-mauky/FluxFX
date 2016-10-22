@@ -1,10 +1,9 @@
 package contactsflux;
 
+import eu.lestard.easydi.EasyDI;
 import eu.lestard.fluxfx.Dispatcher;
 import eu.lestard.fluxfx.ViewLoader;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,9 +22,10 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        final Parent p = ViewLoader.load(ContactsView.class );
+        EasyDI context = new EasyDI();
+        ViewLoader.setDependencyInjector(context::getInstance);
 
-        final ContactsStore contactsStore = new ContactsStore();
+        final Parent p = ViewLoader.load(ContactsView.class );
 
         Scene scene = new Scene(p );
 
@@ -34,37 +34,7 @@ public class App extends Application {
         primaryStage.setWidth( 667 );
         primaryStage.setHeight( 376 );
         primaryStage.setOnShown(
-
-                (evt) -> {
-
-                    //
-                    // Start a Task to retrieve the Contact object
-                    //
-                    // Prior to starting the Task, send a reference to interested parties who can bind JavaFX
-                    // controls to the Task.  When finished, send a notification to listeners with the data.
-                    //
-
-                    Task<ObservableList<Contact>> task = new Task<ObservableList<Contact>>() {
-                        @Override
-                        protected ObservableList<Contact> call() throws Exception {
-                            updateMessage("Loading contacts");
-                            updateProgress(0.5d, 1.0d);
-                            return contactsStore.getContacts();
-                        }
-
-                        @Override
-                        protected void succeeded() {
-                            Dispatcher.getInstance().dispatch(
-                                    new InitContactsViewAction(getValue())
-                            );
-                        }
-                    };
-                    Dispatcher.getInstance().dispatch(
-                            new BindTaskToProgressAction<>(task)
-                    );
-
-                    new Thread(task).start();
-                 }
+                (evt) -> Dispatcher.getInstance().dispatch(new FetchContactsAction())
         );
         primaryStage.show();
     }
