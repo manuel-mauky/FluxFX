@@ -23,6 +23,8 @@ public interface ReactView extends View, Initializable {
 
     default void componentDidMount() {}
 
+    default void componentWillUnmount() {}
+
     @Override
     default void initialize(URL location, ResourceBundle resources) {
         getInitialState().run();
